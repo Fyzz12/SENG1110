@@ -1,0 +1,32 @@
+Note to self: need lots of comments throughout code
+Stack {} so that open is above close
+
+
+Date started: 14/09/25  4-5 hours work.
+
+Step 1. Code all data types and variables needed.
+Each unique pizza needs price for each size hard coded, as well as unqie counters for each pizza and size.
+Also need option small, medium and large once pizza is chosen.
+Each add-on needs a boolean to offer the add-on (yes or no answer from user), counters for each add-on sold and a hard coded price.
+Tax rate needs to be hard coded at 10%. Unsure if 0.1 or 1.1 will be used at this time. Also add sub-total and total price for that order.
+DailyTotalSales and TotalOrderCount taken from help to start section. Needed to track totals over many orders.
+
+Do I need to add variables for previous sales?
+
+Step 2. Begin coding while loop. Based off of sources below, my boolean expression will change from false to true on input of "9", closing the menu.
+Used in conjunction with if, if else for options 1 - 8
+https://stackoverflow.com/questions/7951690/how-do-i-exit-a-while-loop-in-java
+https://www.geeksforgeeks.org/java/java-while-loop-with-examples/#examples-of-java-while-loop
+
+My loop needed to change from boolean exit = true, while(exit) to exit = false, while(!exit) to ensure loop continues with an invalid input.
+
+While loop will reprompt if an invalid int is input. If a letter is input an infinite loop bug occurs.
+To solve this problem I created if else statements surrounding the menu options statements.
+If an integer is input, checked by scanner.hasNextInt, the menu will continue as normal.
+If the input is invalid the statement moves to else. The invalid input is stored in a string, an invalid input message is displayed and the loop continues.
+First else staements only catches incorrect integers, the following else statement prevents inputs from other data types.
+https://www.tutorialspoint.com/java/util/scanner_hasnextint.htm
+https://www.reddit.com/r/learnjava/comments/l4bm29/how_is_scannerhasnextint_supposed_to_work/
+
+18/09/25
+Need to add varaibles for previous order. Needed to compare previous order with current order.

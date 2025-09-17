@@ -2,9 +2,9 @@ import java.util.Scanner;
 
 public class PizzaOrderingSystem {
 // add in this section all class variables (int, double, ). 14/9
-    char pizzaSize;   // S, M, L
-    int pizzaQuantity;
-    String pizzaType; //margherita, neapolitan, marinara
+    static char pizzaSize;   // S, M, L
+    static int pizzaQuantity;
+    static String pizzaType = ""; //margherita, neapolitan, marinara
 
 
     //individual counters and price variables for pizza type and size below
@@ -39,34 +39,49 @@ public class PizzaOrderingSystem {
     final double price_MarinaraLarge = 14;
 
     //sides
-    Boolean addCheese;    // (Y / N)
-    int cheeseSum;
-    final double cheesePrice = 1.5;
+    char addCheese;    // (Y / N)
+    static int cheeseSum = 0;
+    static final double cheesePrice = 1.5;
 
-    Boolean addOlives;
-    int oliveSum;
-    final double olivePrice = 1;
+    char addOlives;
+    static int oliveSum = 0;
+    static final double olivePrice = 1;
 
-    Boolean addGarlicBread;
-    int garlicBreadSum;
-    final double garlicBreadPrice = 4;
+    char addGarlicBread;
+    static int garlicBreadSum = 0;
+    static final double garlicBreadPrice = 4;
 
-    Boolean addSoftDrink;
-    int SoftDrinkSum;
-    final double softDrinkPrice = 2.5;
+    char addSoftDrink;
+    static int SoftDrinkSum = 0;
+    static final double softDrinkPrice = 2.5;
 
     //POS
-    double orderSubTotal;
-    double orderTax;
-    double orderTotal;
-    // Unsure at this moment if I need variables for previous order? 14/9
+    static double orderSubTotal = 0;
+    static double addOns = 0;
+    static double orderTax = 0;
+    static double orderTotal = 0;
     final double taxRate = 0.1;
+
+    //previous order
+    Boolean prevOrderExist;
+    Boolean prevExtraCheese;
+    Boolean prevOlives;
+    Boolean prevGarlicBread;
+    Boolean prevDrink;
+    String prevOrderType;
+    char prevOrderSize;
+    int prevOrderQuantity;
+    double prevAddOns;
+    double prevSubTotal;
+    double prevTax;
+    double prevTotal;
+
 
     private static double dailyTotalSales = 0.0;
     private static int totalOrderCount = 0;
 
+    static Scanner scanner = new Scanner(System.in);
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
         boolean exit = false;
 
         while (!exit) {
@@ -85,6 +100,7 @@ public class PizzaOrderingSystem {
             // allows user to choose options between 1 and 9
             if (scanner.hasNextInt()){
             int option = scanner.nextInt();
+            scanner.nextLine();
             
                 if (option == 1) {
                     viewPizzaMenu();
@@ -124,7 +140,7 @@ public class PizzaOrderingSystem {
             }
             }
         
-        scanner.close();
+        scanner.close(); //maybe delete
         }
         // methods
         public static void viewPizzaMenu(){
@@ -136,7 +152,135 @@ public class PizzaOrderingSystem {
         }
 
         public static void newPizzaOrder(){
-            System.out.println("Under Construction");
+            System.out.println(" Follow the prompts to order pizza ");
+
+            while(true)
+            {
+                System.out.println(" Please enter pizza type");
+                String pizzaType = scanner.nextLine();
+
+                if (pizzaType.equals("Margherita") || pizzaType.equals("Neapolitan") || pizzaType.equals("Marinara"))
+                { System.out.println(" You have chosen " + pizzaType);
+                break;
+
+                } else {
+                System.out.println(" Invalid pizza type ");
+                }
+            
+            }
+
+            while(true){
+                System.out.println(" What size pizza would you like? ");
+                char pizzaSize = scanner.next().charAt(0);
+
+                if (pizzaSize == 'S' || pizzaSize == 'M' || pizzaSize == 'L')
+                {System.out.println(" You have chosen pizza size " + pizzaSize);
+                break;
+
+                } else {
+                System.out.println(" Invalid pizza size ");
+                }
+    
+            }        
+
+            while (true){
+                System.out.println(" How many pizzas would you like to order? Max 10 ");
+                int pizzaQuantity = scanner.nextInt();
+                scanner.nextLine();
+
+                if(pizzaQuantity >= 1 && pizzaQuantity <= 10) {
+                    System.out.println("you have orderred " + pizzaQuantity + "" + pizzaType +" pizza(s)");
+                    break;
+                        
+            } else {
+                System.out.println (" Invalid Input ");
+              }
+            }
+
+            while (true){
+                System.out.println(" Would you like to add cheese? (Y/N)");
+                String addCheese = scanner.nextLine();
+
+                    if (addCheese.equals("Y")) {
+                        cheeseSum++;
+                        addOns += cheesePrice * pizzaQuantity;
+                        break;
+                    } else if (addCheese.equals("N")) {
+                        break;
+                    } else {
+                        System.out.println(" Invalid input. Please enter Y or N ");
+                    }
+            }
+
+            while (true){
+                System.out.println(" would you like to add olives? (Y/N)");
+                String addOlives = scanner.nextLine();
+
+                if (addOlives.equals("Y")) {
+                    oliveSum++;
+                    addOns += olivePrice * pizzaQuantity;
+                    break;
+                } else if (addOlives.equals("N")) {
+                    break;
+                } else {
+                    System.out.println(" Invalid input. Please enter Y or N ");
+                }
+            }
+            while (true){
+
+                System.out.println(" would you like to Garlic Bread? (Y/N)");
+                String addGarlicBread = scanner.nextLine();
+
+                if (addGarlicBread.equals("Y")) {
+                    garlicBreadSum++;
+                    addOns += garlicBreadSum;
+                    break;
+                } else if (addGarlicBread.equals("N")) {
+                    break;
+                } else {
+                    System.out.println(" Invalid input. Please enter Y or N ");
+                }
+            }
+
+            while (true){
+                System.out.println(" would you like to add a soft drink? (Y/N)");
+                String addSoftDrink = scanner.nextLine();
+
+                if (addSoftDrink.equals("Y")) {
+                    oliveSum++;
+                    addOns += softDrinkPrice;
+                    break;
+                } else if (addSoftDrink.equals("N")) {
+                    break;
+                } else {
+                    System.out.println(" Invalid input. Please enter Y or N ");
+                }
+            }
+
+            if (pizzaType.equals("Margherita")) {
+                if (pizzaSize == 'S') orderSubTotal = 8;
+                    else if (pizzaSize == 'M') orderSubTotal = 10;
+                        else if (pizzaSize == 'L') orderSubTotal = 12;
+
+            } else if (pizzaType.equals("Neapolitan")) {
+                if (pizzaSize == 'S') orderSubTotal = 9;
+                    else if (pizzaSize == 'M') orderSubTotal = 11;
+                        else if (pizzaSize == 'L') orderSubTotal = 13.5;
+            
+            } else if (pizzaType.equals("Marinara")) {
+                if (pizzaSize == 'S') orderSubTotal = 9.5;
+                    else if (pizzaSize == 'M') orderSubTotal = 11.5;
+                        else if (pizzaSize == 'L') orderSubTotal = 14;
+            }
+
+            // need to do subtotal, addon, tax and final total code. (1 line each)
+            // need to print receipt
+            // nned to update daily totals
+
+
+
+
+            
         }
 
         public static void compareOrder(){

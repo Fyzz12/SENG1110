@@ -56,28 +56,31 @@ public class PizzaOrderingSystem {
     static final double softDrinkPrice = 2.5;
 
     //POS
+    double baseCost;
+    static double price;
     static double orderSubTotal = 0;
     static double addOns = 0;
-    static double orderTax = 0;
+    double orderTax;
     static double orderTotal = 0;
     final double taxRate = 0.1;
 
     //previous order
-    Boolean prevOrderExist;
-    Boolean prevExtraCheese;
-    Boolean prevOlives;
-    Boolean prevGarlicBread;
-    Boolean prevDrink;
-    String prevOrderType;
-    char prevOrderSize;
-    int prevOrderQuantity;
-    double prevAddOns;
-    double prevSubTotal;
-    double prevTax;
-    double prevTotal;
+    static Boolean prevOrderExist;
+    static Boolean prevExtraCheese;
+    static Boolean prevOlives;
+    static Boolean prevGarlicBread;
+    static Boolean prevDrink;
+    static String prevType;
+    static char prevSize;
+    static int prevQuantity;
+    static double prevAddOns;
+    static double prevSubTotal;
+    static double prevTax;
+    static double prevTotal;
+    static double prevBase;
 
 
-    private static double dailyTotalSales = 0.0;
+    private static double dailyTotalSales = 0.0; //why does this line and line below have the error the value is not used
     private static int totalOrderCount = 0;
 
     static Scanner scanner = new Scanner(System.in);
@@ -151,13 +154,34 @@ public class PizzaOrderingSystem {
             System.out.println(" "); //void to help me read console.
         }
 
+        // helper method
+        public static double pizzaPrice(String pizzaType, char pizzaSize, int pizzaQuantity) {
+            double price = 0;
+            if (pizzaType.equals("Margherita")) {
+                if (pizzaSize == 'S') price = 8;
+                    else if (pizzaSize == 'M') price = 10;
+                        else if (pizzaSize == 'L') price = 12;
+
+            } else if (pizzaType.equals("Neapolitan")) {
+                if (pizzaSize == 'S') price = 9;
+                    else if (pizzaSize == 'M') price = 11;
+                        else if (pizzaSize == 'L') price = 13.5;
+            
+            } else if (pizzaType.equals("Marinara")) {
+                if (pizzaSize == 'S') price = 9.5;
+                    else if (pizzaSize == 'M') price = 11.5;
+                        else if (pizzaSize == 'L') price = 14;
+            }
+            return price * pizzaQuantity;
+        }
+
         public static void newPizzaOrder(){
             System.out.println(" Follow the prompts to order pizza ");
 
             while(true)
             {
                 System.out.println(" Please enter pizza type");
-                String pizzaType = scanner.nextLine();
+                pizzaType = scanner.nextLine();
 
                 if (pizzaType.equals("Margherita") || pizzaType.equals("Neapolitan") || pizzaType.equals("Marinara"))
                 { System.out.println(" You have chosen " + pizzaType);
@@ -171,7 +195,7 @@ public class PizzaOrderingSystem {
 
             while(true){
                 System.out.println(" What size pizza would you like? ");
-                char pizzaSize = scanner.next().charAt(0);
+                pizzaSize = scanner.next().charAt(0);
 
                 if (pizzaSize == 'S' || pizzaSize == 'M' || pizzaSize == 'L')
                 {System.out.println(" You have chosen pizza size " + pizzaSize);
@@ -185,7 +209,7 @@ public class PizzaOrderingSystem {
 
             while (true){
                 System.out.println(" How many pizzas would you like to order? Max 10 ");
-                int pizzaQuantity = scanner.nextInt();
+                pizzaQuantity = scanner.nextInt();
                 scanner.nextLine();
 
                 if(pizzaQuantity >= 1 && pizzaQuantity <= 10) {
@@ -233,7 +257,7 @@ public class PizzaOrderingSystem {
 
                 if (addGarlicBread.equals("Y")) {
                     garlicBreadSum++;
-                    addOns += garlicBreadSum;
+                    addOns += garlicBreadPrice;
                     break;
                 } else if (addGarlicBread.equals("N")) {
                     break;
@@ -247,7 +271,7 @@ public class PizzaOrderingSystem {
                 String addSoftDrink = scanner.nextLine();
 
                 if (addSoftDrink.equals("Y")) {
-                    oliveSum++;
+                    SoftDrinkSum++;
                     addOns += softDrinkPrice;
                     break;
                 } else if (addSoftDrink.equals("N")) {
@@ -257,38 +281,79 @@ public class PizzaOrderingSystem {
                 }
             }
 
-            if (pizzaType.equals("Margherita")) {
-                if (pizzaSize == 'S') orderSubTotal = 8;
-                    else if (pizzaSize == 'M') orderSubTotal = 10;
-                        else if (pizzaSize == 'L') orderSubTotal = 12;
+            double baseCost = pizzaPrice(pizzaType, pizzaSize, pizzaQuantity);
+            orderSubTotal = baseCost + addOns;
+            double orderTax = 0.1 * orderSubTotal;
+            orderTotal = orderSubTotal + orderTax;
 
-            } else if (pizzaType.equals("Neapolitan")) {
-                if (pizzaSize == 'S') orderSubTotal = 9;
-                    else if (pizzaSize == 'M') orderSubTotal = 11;
-                        else if (pizzaSize == 'L') orderSubTotal = 13.5;
+            System.out.println(" Order Receipt ");
+            System.out.println(" Pizza type: " + pizzaType);
+            System.out.println(" Size: " + pizzaSize);
+            System.out.println(" Quantity " + pizzaQuantity);
+            System.out.println(" Base Cost:" + baseCost);
+            if (addOns > 0) {System.out.println(" Add-ons " + addOns);}
+            System.out.println(" Subtotal: " + orderSubTotal);
+            System.out.println(" Tax (10%) " + orderTax);
+            System.out.println(" Total: " + orderTotal);
             
-            } else if (pizzaType.equals("Marinara")) {
-                if (pizzaSize == 'S') orderSubTotal = 9.5;
-                    else if (pizzaSize == 'M') orderSubTotal = 11.5;
-                        else if (pizzaSize == 'L') orderSubTotal = 14;
-            }
+            dailyTotalSales += orderTotal;
+            totalOrderCount++;            
 
-            // need to do subtotal, addon, tax and final total code. (1 line each)
-            // need to print receipt
-            // nned to update daily totals
-
-
-
-
-            
+            prevOrderExist = true;
+            prevType = pizzaType;
+            prevSize = pizzaSize;
+            prevQuantity = pizzaQuantity;
+            prevBase = baseCost;    
+            prevAddOns = addOns;
+            prevSubTotal = orderSubTotal;
+            prevTax = orderTax;
+            prevTotal = orderTotal;
         }
 
         public static void compareOrder(){
-            System.out.println("Under Construction");
+            System.out.println(" Compare Two Pizza Orders ");
+            System.out.println(" Please enter your first pizza type (Margherita, Neapolitan, Marinara) ");
+            String pizzaType1 = scanner.nextLine();
+
+            System.out.println(" Please enter pizza size (S/M/L) ");
+            char pizzaSize1 = scanner.next().charAt(0);
+            scanner.nextLine();
+
+            System.out.println(" Please enter pizza qunatity ");
+            int Quantity1 = scanner.nextInt();
+            scanner. nextLine();
+
+            double total1 = pizzaPrice(pizzaType1, pizzaSize1, Quantity1);
+
+            System.out.println(" Please enter your second pizza type (Margherita, Neapolitan, Marinara) ");
+            String pizzaType2 = scanner.nextLine();
+
+            System.out.println(" Please enter pizza size (S/M/L) ");
+            char pizzaSize2 = scanner.next().charAt(0);
+            scanner.nextLine();
+
+            System.out.println(" Please enter pizza quantity ");
+            int quantity2 = scanner.nextInt();
+            scanner.nextLine();
+
+            double total2 = pizzaPrice(pizzaType2, pizzaSize2, quantity2);
+
+        System.out.println(" Pizza Comparison ");
+        System.out.println(" The cost of the first order is " + total1);
+        System.out.println(" The cost of the second order is " + total2);
+
+        if (total1 > total2) {
+            System.out.println(" The first order is more expensive than the second ");
+        } else if (total1 < total2) {
+            System.out.println(" The second order is more expensive than the first ");
+        } else {
+                System.out.println(" Both orders are the same price ");
+            }
+        System.out.println(" "); //another void to help read console
         }
 
         public static void simulateSpecial(){
-            System.out.println("Under Construction");
+            System.out.println("");
         }
 
         public static void salesReport(){
